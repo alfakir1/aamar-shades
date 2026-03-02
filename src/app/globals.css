@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* Industrial Corporate Palette */
+  --color-background: #ffffff;
+  --color-foreground: #1c1c1c;
+
+  --color-primary: #1c1c1c;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #27272a;
+
+  --color-accent: #f97316; /* Industrial Orange */
+  --color-accent-foreground: #ffffff;
+
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #1c1c1c;
+
+  --color-border: #e4e4e7;
+  --color-input: #e4e4e7;
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  width: 100%;
+  max-width: 1280px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased selection:bg-accent selection:text-white;
+  }
+}

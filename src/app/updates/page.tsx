@@ -1,0 +1,57 @@
+import { safeFetch } from '@/lib/sanity.client'
+import { postsQuery } from '@/lib/sanity.queries'
+import { PostCard } from '@/components/posts/PostCard'
+import { Container } from '@/components/ui/Container'
+import { SectionHeading } from '@/components/ui/SectionHeading'
+import type { Metadata } from 'next'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+    title: 'المستجدات',
+    description: 'آخر أخبار عمار للمظلات، مشاريعنا الجديدة، ومقالات تقنية في مجال التظليل.',
+}
+
+export default async function UpdatesPage() {
+    const posts = await safeFetch<any[]>(postsQuery, {}, { next: { revalidate: 3600 } })
+
+    return (
+        <>
+            <section className="bg-primary py-16 md:py-20">
+                <Container>
+                    <div className="max-w-2xl">
+                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">المستجدات</h1>
+                        <p className="text-white/70 text-lg leading-relaxed">
+                            أحدث مشاريعنا المنجزة ومقالاتنا في مجال التظليل والهياكل الخارجية.
+                        </p>
+                    </div>
+                </Container>
+            </section>
+
+            <section className="py-20 bg-background">
+                <Container>
+                    <SectionHeading title="جميع المقالات" subtitle="تحديثات دورية من فريق عمار للمظلات" />
+                    {posts && posts.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {posts.map((post: { _id: string; title: string; slug: { current: string }; excerpt?: string; publishedAt?: string; coverImage?: { asset: { url: string } } }) => (
+                                <PostCard
+                                    key={post._id}
+                                    title={post.title}
+                                    slug={post.slug.current}
+                                    excerpt={post.excerpt}
+                                    publishedAt={post.publishedAt}
+                                    imageUrl={post.coverImage?.asset?.url}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-24 text-muted-foreground">
+                            <p className="text-xl mb-2">لا توجد مقالات بعد</p>
+                            <p className="text-sm">أضف مقالات من خلال لوحة تحكم Sanity Studio.</p>
+                        </div>
+                    )}
+                </Container>
+            </section>
+        </>
+    )
+}
