@@ -5,6 +5,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { StickyCTA } from "@/components/layout/StickyCTA";
 
+import { safeFetch } from "@/lib/sanity.client";
+import { siteSettingsQuery, servicesQuery } from "@/lib/sanity.queries";
+
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
   variable: "--font-cairo",
@@ -25,20 +28,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await safeFetch<any>(siteSettingsQuery);
+  const services = await safeFetch<any[]>(servicesQuery);
+
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} font-sans antialiased flex flex-col min-h-screen`}>
-        <Navbar />
+        <Navbar settings={settings} />
         <main className="flex-grow">
           {children}
         </main>
-        <Footer />
-        <StickyCTA />
+        <Footer settings={settings} services={services} />
+        <StickyCTA settings={settings} />
       </body>
     </html>
   );

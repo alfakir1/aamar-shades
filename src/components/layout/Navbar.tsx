@@ -15,9 +15,12 @@ const navLinks = [
     { href: '/request', label: 'طلب خدمة' },
 ]
 
-export function Navbar() {
+export function Navbar({ settings }: { settings: any }) {
     const [isOpen, setIsOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+
+    const phone = settings?.phone || '+966555000000'
+    const companyName = settings?.companyName || 'عمار للمظلات'
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20)
@@ -39,10 +42,10 @@ export function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-3 group">
                         <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center transform group-hover:rotate-3 transition-transform">
-                            <span className="text-white font-bold text-lg">ع</span>
+                            <span className="text-white font-bold text-lg">{companyName.charAt(0)}</span>
                         </div>
                         <div className="leading-tight">
-                            <span className="block font-bold text-primary text-lg">عمار للمظلات</span>
+                            <span className="block font-bold text-primary text-lg">{companyName}</span>
                             <span className="block text-xs text-muted-foreground">حلول التظليل الاحترافية</span>
                         </div>
                     </Link>
@@ -62,7 +65,7 @@ export function Navbar() {
 
                     {/* CTA Phone */}
                     <a
-                        href="tel:+966555000000"
+                        href={`tel:${phone}`}
                         className="hidden md:flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-orange-600 transition-colors"
                     >
                         <Phone size={16} />
@@ -100,7 +103,7 @@ export function Navbar() {
                             </Link>
                         ))}
                         <a
-                            href="tel:+966555000000"
+                            href={`tel:${phone}`}
                             className="mt-2 flex items-center justify-center gap-2 bg-accent text-white px-4 py-3 rounded-lg font-semibold text-sm"
                         >
                             <Phone size={16} />

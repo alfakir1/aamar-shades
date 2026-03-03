@@ -3,9 +3,10 @@ import { servicesQuery } from '@/lib/sanity.queries'
 import { ServiceGrid } from '@/components/services/ServiceGrid'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
 
-export const revalidate = 3600
+export const revalidate = 60
 
 export const metadata: Metadata = {
     title: 'خدماتنا',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ServicesPage() {
-    const services = await safeFetch<any[]>(servicesQuery, {}, { next: { revalidate: 3600 } })
+    const services = await safeFetch<any[]>(servicesQuery, {}, { next: { revalidate: 60 } })
 
     return (
         <>
@@ -37,10 +38,10 @@ export default async function ServicesPage() {
                     {services && services.length > 0 ? (
                         <ServiceGrid services={services} />
                     ) : (
-                        <div className="text-center py-24 text-muted-foreground">
-                            <p className="text-xl mb-2">لا توجد خدمات بعد</p>
-                            <p className="text-sm">أضف خدمات من خلال لوحة تحكم Sanity Studio.</p>
-                        </div>
+                        <EmptyState
+                            title="لا توجد خدمات بعد"
+                            description="نحن نعمل حالياً على إضافة خدماتنا المتميزة. ترقبوا التحديث القادم."
+                        />
                     )}
                 </Container>
             </section>

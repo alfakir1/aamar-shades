@@ -42,12 +42,28 @@ Create or edit `.env.local` in the project root:
 ```env
 NEXT_PUBLIC_SANITY_PROJECT_ID="your_project_id_here"
 NEXT_PUBLIC_SANITY_DATASET="production"
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+SANITY_AUTH_TOKEN="your_write_token_here"
 ```
 
-Replace `your_project_id_here` with the actual ID from your Sanity dashboard.
+1. Replace `your_project_id_here` with the actual ID from your Sanity dashboard.
+2. Replace `your_write_token_here` with a Sanity token that has **write** access (needed for seeding).
 
-### 4. Run Next.js Locally
+### 4. Seed Sanity Content (Recommended)
+
+To populate the website immediately with professional Arabic content and high-quality images:
+
+```bash
+# Ensure you have tsx installed (or use npx)
+npx tsx src/sanity/seed.ts
+```
+
+This will create:
+- **Site Settings**: Contact Info, SEO defaults
+- **Services**: 6 main services with descriptions and images
+- **Gallery**: Categories and initial items
+- **Posts**: 3 starting blog posts
+
+### 5. Run Next.js Locally
 
 ```bash
 npm run dev
@@ -55,88 +71,29 @@ npm run dev
 
 Visit: [http://localhost:3000](http://localhost:3000)
 
-### 5. Access Sanity Studio
+### 6. CORS Requirements
 
-Once `npm run dev` is running, open:
+If you encounter issues with Sanity Studio or fetching data, Ensure your Sanity project allows the following origin:
+- `http://localhost:3000`
 
-```
-http://localhost:3000/studio
-```
-
-> First visit will prompt you to log in with your Sanity account.
-
-### 6. Add Content in Sanity Studio
-
-Go to your Studio at `/studio` and add:
-
-- **Site Settings**: Company name, phone, WhatsApp, address
-- **Services** (6 default services):
-  - مظلات السيارات
-  - الهناجر
-  - برجولات الحدائق
-  - الجلسات الخارجية
-  - سواتر الحوش
-  - كلادينج الواجهات
-- **Gallery Categories + Items**
-- **Posts/Updates**
-
-Mark services as **Featured** to show them on the Home page.
-
----
-
-## 📂 Project Structure
-
-```
-src/
-├── app/
-│   ├── layout.tsx            ← Root layout (Navbar + Footer + StickyCTA)
-│   ├── page.tsx              ← Home (Hero, Services, Highlights, CTA, Posts)
-│   ├── about/page.tsx
-│   ├── services/page.tsx
-│   ├── services/[slug]/page.tsx
-│   ├── gallery/page.tsx
-│   ├── request/page.tsx
-│   ├── updates/page.tsx
-│   ├── updates/[slug]/page.tsx
-│   ├── studio/[[...tool]]/page.tsx  ← Sanity Studio
-│   └── sitemap.ts
-├── components/
-│   ├── layout/   (Navbar, Footer, StickyCTA)
-│   ├── ui/       (Button, Card, Container, SectionHeading)
-│   ├── services/ (ServiceCard, ServiceGrid)
-│   ├── gallery/  (GalleryClient — filtering + lightbox)
-│   └── posts/    (PostCard)
-├── lib/
-│   ├── sanity.client.ts
-│   ├── sanity.queries.ts
-│   └── utils.ts
-└── sanity/
-    ├── env.ts
-    ├── lib/
-    │   ├── client.ts
-    │   └── image.ts
-    └── schemaTypes/
-        ├── siteSettings.ts
-        ├── service.ts
-        ├── galleryCategory.ts
-        ├── galleryItem.ts
-        ├── post.ts
-        └── index.ts
-```
+Go to [sanity.io/manage](https://sanity.io/manage) > Settings > API > CORS origins to add it.
 
 ---
 
 ## ⚡ ISR / Revalidation
 
-All content pages use ISR with `revalidate = 3600` (1 hour). To test locally:
+All content pages use ISR (Incremental Static Regeneration).
 
-1. Add/update content in Studio
-2. Wait for the revalidation window OR restart dev server
-3. In dev mode (`npm run dev`), pages always fetch fresh data automatically
+- **Local Development**: `npm run dev` fetches fresh data on every request.
+- **Production Testing**: To test real ISR behavior (caching + background revalidation):
+  1. Set `revalidate = 60` in relevant routes (currently 60s for testing).
+  2. Run `npm build && npm start`.
+  3. Change content in Sanity.
+  4. Refresh the page (it may take two refreshes to see the update after 1 min).
 
 ---
 
-## 🏗️ Services Included (from reference structure)
+## 🏗️ Services Included
 
 | Arabic                | English Equivalent         |
 |-----------------------|---------------------------|
@@ -158,10 +115,11 @@ npm run start
 
 ---
 
-## 📞 Contact Placeholders
+## 📞 Single Source of Truth
 
-Update the following in the source before launch:
-- Phone: `+966555000000` → in `Navbar.tsx`, `Footer.tsx`, `StickyCTA.tsx`, `request/page.tsx`
-- WhatsApp: same number references
-- Email: `info@aamarshades.com` → `request/page.tsx`
-- Sanity projectId: `.env.local`
+The website reads all contact info (Phone, WhatsApp, Email, Address) from **Sanity Site Settings**.
+Updating them in the CMS will reflect across:
+- Navbar
+- Footer
+- Sticky CTA
+- Request Form (WhatsApp Link)

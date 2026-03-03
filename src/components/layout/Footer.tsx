@@ -19,8 +19,19 @@ const footerLinks = {
     ],
 }
 
-export function Footer() {
+export function Footer({ settings, services }: { settings: any; services: any[] | null }) {
     const currentYear = new Date().getFullYear()
+
+    const phone = settings?.phone || '+966555000000'
+    const whatsapp = settings?.whatsapp || phone
+    const email = settings?.email || 'info@aamarshades.com'
+    const address = settings?.address || 'المملكة العربية السعودية'
+    const companyName = settings?.companyName || 'عمار للمظلات'
+
+    // Use dynamic services if available, fallback to hardcoded if not
+    const displayServices = services && services.length > 0
+        ? services.map(s => ({ href: `/services/${s.slug.current}`, label: s.title }))
+        : footerLinks.services
 
     return (
         <footer className="bg-primary text-white">
@@ -30,10 +41,10 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span className="text-white font-bold text-lg">ع</span>
+                                <span className="text-white font-bold text-lg">{companyName.charAt(0)}</span>
                             </div>
                             <div>
-                                <span className="block font-bold text-xl">عمار للمظلات</span>
+                                <span className="block font-bold text-xl">{companyName}</span>
                                 <span className="block text-sm text-white/60">حلول التظليل الاحترافية</span>
                             </div>
                         </div>
@@ -41,17 +52,21 @@ export function Footer() {
                             نختص في تصميم وتركيب المظلات والهياكل الخارجية بأعلى معايير الجودة، لنمنح مشاريعكم لمسة عصرية وحماية متينة.
                         </p>
                         <div className="mt-6 flex flex-col gap-3">
-                            <a href="tel:+966555000000" className="flex items-center gap-3 text-sm text-white/70 hover:text-accent transition-colors">
+                            <a href={`tel:${phone}`} className="flex items-center gap-3 text-sm text-white/70 hover:text-accent transition-colors">
                                 <Phone size={16} className="text-accent flex-shrink-0" />
-                                +966 55 500 0000
+                                {phone}
                             </a>
-                            <a href="https://wa.me/966555000000" className="flex items-center gap-3 text-sm text-white/70 hover:text-accent transition-colors">
+                            <a href={`https://wa.me/${whatsapp.replace(/\+/g, '')}`} className="flex items-center gap-3 text-sm text-white/70 hover:text-accent transition-colors">
                                 <MessageCircle size={16} className="text-accent flex-shrink-0" />
                                 واتساب: تواصل معنا الآن
                             </a>
+                            <a href={`mailto:${email}`} className="flex items-center gap-3 text-sm text-white/70 hover:text-accent transition-colors">
+                                <Mail size={16} className="text-accent flex-shrink-0" />
+                                {email}
+                            </a>
                             <span className="flex items-center gap-3 text-sm text-white/70">
                                 <MapPin size={16} className="text-accent flex-shrink-0" />
-                                المملكة العربية السعودية
+                                {address}
                             </span>
                         </div>
                     </div>
@@ -60,7 +75,7 @@ export function Footer() {
                     <div>
                         <h3 className="font-bold text-base mb-5 text-white">خدماتنا</h3>
                         <ul className="flex flex-col gap-2">
-                            {footerLinks.services.map((link) => (
+                            {displayServices.map((link) => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="text-sm text-white/60 hover:text-accent transition-colors">
                                         {link.label}
@@ -90,7 +105,7 @@ export function Footer() {
             <div className="border-t border-white/10">
                 <Container>
                     <div className="flex flex-col sm:flex-row items-center justify-between py-5 gap-2 text-xs text-white/40">
-                        <p>© {currentYear} عمار للمظلات. جميع الحقوق محفوظة.</p>
+                        <p>© {currentYear} {companyName}. جميع الحقوق محفوظة.</p>
                         <p>تصميم وتطوير احترافي</p>
                     </div>
                 </Container>

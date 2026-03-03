@@ -3,9 +3,10 @@ import { postsQuery } from '@/lib/sanity.queries'
 import { PostCard } from '@/components/posts/PostCard'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
 
-export const revalidate = 3600
+export const revalidate = 60
 
 export const metadata: Metadata = {
     title: 'المستجدات',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function UpdatesPage() {
-    const posts = await safeFetch<any[]>(postsQuery, {}, { next: { revalidate: 3600 } })
+    const posts = await safeFetch<any[]>(postsQuery, {}, { next: { revalidate: 60 } })
 
     return (
         <>
@@ -45,10 +46,10 @@ export default async function UpdatesPage() {
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-24 text-muted-foreground">
-                            <p className="text-xl mb-2">لا توجد مقالات بعد</p>
-                            <p className="text-sm">أضف مقالات من خلال لوحة تحكم Sanity Studio.</p>
-                        </div>
+                        <EmptyState
+                            title="لا توجد مقالات بعد"
+                            description="تابعنا قريباً للحصول على أحدث نصائح التظليل وأخبار مشاريعنا."
+                        />
                     )}
                 </Container>
             </section>

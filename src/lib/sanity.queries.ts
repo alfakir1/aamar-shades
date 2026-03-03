@@ -2,7 +2,7 @@ import { groq } from 'next-sanity'
 
 // ── Site Settings ──────────────────────────────────────────────
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
-  companyName, phone, whatsapp, address,
+  companyName, phone, whatsapp, email, address,
   defaultSeoTitle, defaultSeoDescription,
   logo { asset->{ _id, url } }
 }`

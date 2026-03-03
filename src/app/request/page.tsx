@@ -2,6 +2,9 @@ import { PhoneCall, MessageCircle, MapPin, Mail } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
+import { RequestForm } from '@/components/ui/RequestForm'
+import { safeFetch } from '@/lib/sanity.client'
+import { siteSettingsQuery } from '@/lib/sanity.queries'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -9,14 +12,21 @@ export const metadata: Metadata = {
     description: 'تواصل مع عمار للمظلات لطلب عرض سعر أو استشارة مجانية.',
 }
 
-const contactOptions = [
-    { icon: PhoneCall, label: 'هاتف', value: '+966 55 500 0000', href: 'tel:+966555000000' },
-    { icon: MessageCircle, label: 'واتساب', value: 'تواصل عبر واتساب الآن', href: 'https://wa.me/966555000000' },
-    { icon: MapPin, label: 'الموقع', value: 'المملكة العربية السعودية', href: '#' },
-    { icon: Mail, label: 'البريد الإلكتروني', value: 'info@aamarshades.com', href: 'mailto:info@aamarshades.com' },
-]
+export default async function RequestPage() {
+    const settings = await safeFetch<any>(siteSettingsQuery)
 
-export default function RequestPage() {
+    const phone = settings?.phone || '+966555000000'
+    const whatsapp = settings?.whatsapp || phone
+    const email = settings?.email || 'info@aamarshades.com'
+    const address = settings?.address || 'المملكة العربية السعودية'
+
+    const contactOptions = [
+        { icon: PhoneCall, label: 'هاتف', value: phone, href: `tel:${phone}` },
+        { icon: MessageCircle, label: 'واتساب', value: 'تواصل عبر واتساب الآن', href: `https://wa.me/${whatsapp.replace(/\+/g, '')}` },
+        { icon: MapPin, label: 'الموقع', value: address, href: '#' },
+        { icon: Mail, label: 'البريد الإلكتروني', value: email, href: `mailto:${email}` },
+    ]
+
     return (
         <>
             <section className="bg-primary py-16 md:py-20">
@@ -56,13 +66,13 @@ export default function RequestPage() {
 
                             {/* Quick actions */}
                             <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                                <a href="tel:+966555000000" className="flex-1">
+                                <a href={`tel:${phone}`} className="flex-1">
                                     <Button size="lg" className="w-full">
                                         <PhoneCall size={18} />
                                         اتصل الآن
                                     </Button>
                                 </a>
-                                <a href="https://wa.me/966555000000?text=أريد طلب عرض سعر" target="_blank" rel="noopener noreferrer" className="flex-1">
+                                <a href={`https://wa.me/${whatsapp.replace(/\+/g, '')}?text=أريد طلب عرض سعر`} target="_blank" rel="noopener noreferrer" className="flex-1">
                                     <Button variant="outline" size="lg" className="w-full">
                                         <MessageCircle size={18} />
                                         واتساب
@@ -71,46 +81,10 @@ export default function RequestPage() {
                             </div>
                         </div>
 
-                        {/* Form placeholder */}
+                        {/* Form */}
                         <div className="bg-secondary rounded-2xl p-8 border border-border">
                             <h2 className="text-xl font-bold text-primary mb-6">أرسل طلبك</h2>
-                            <div className="space-y-5">
-                                {[
-                                    { label: 'الاسم الكامل', type: 'text', placeholder: 'أدخل اسمك' },
-                                    { label: 'رقم الجوال', type: 'tel', placeholder: '05xxxxxxxx' },
-                                    { label: 'المدينة', type: 'text', placeholder: 'مثال: الرياض' },
-                                ].map((f) => (
-                                    <div key={f.label}>
-                                        <label className="block text-sm font-semibold text-primary mb-1.5">{f.label}</label>
-                                        <input
-                                            type={f.type}
-                                            placeholder={f.placeholder}
-                                            className="w-full px-4 py-3 rounded-lg border border-border bg-white text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-shadow"
-                                        />
-                                    </div>
-                                ))}
-                                <div>
-                                    <label className="block text-sm font-semibold text-primary mb-1.5">نوع الخدمة المطلوبة</label>
-                                    <select className="w-full px-4 py-3 rounded-lg border border-border bg-white text-primary focus:outline-none focus:ring-2 focus:ring-accent/50">
-                                        <option value="">اختر الخدمة</option>
-                                        <option>مظلات السيارات</option>
-                                        <option>الهناجر</option>
-                                        <option>برجولات الحدائق</option>
-                                        <option>الجلسات الخارجية</option>
-                                        <option>سواتر الحوش</option>
-                                        <option>كلادينج الواجهات</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-primary mb-1.5">ملاحظات إضافية</label>
-                                    <textarea
-                                        rows={4}
-                                        placeholder="صف مشروعك أو احتياجاتك..."
-                                        className="w-full px-4 py-3 rounded-lg border border-border bg-white text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
-                                    />
-                                </div>
-                                <Button className="w-full" size="lg">إرسال الطلب</Button>
-                            </div>
+                            <RequestForm whatsappNumber={whatsapp} />
                         </div>
                     </div>
                 </Container>
