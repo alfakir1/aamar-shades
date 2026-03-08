@@ -19,43 +19,29 @@ Modern industrial corporate website built with **Next.js 14+ App Router**, **Typ
 
 ## 🚀 Quick Start (Local Development)
 
-### 1. Install Dependencies
+### 1. Database Setup (PostgreSQL)
+
+You will need a local PostgreSQL database running. You can set the connection in `.env`.
+
+Create `.env` based on `.env.example`:
+
+```env
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/aamar_shades?schema=public"
+```
+
+### 2. Install and Setup
 
 ```bash
 npm install
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
+npm run dev
 ```
 
-### 2. Create Sanity Project
+Visit: [http://localhost:3000](http://localhost:3000)
 
-If you haven't created a Sanity project yet:
-
-```bash
-npx sanity@latest init --env
-```
-
-Or go to [sanity.io/manage](https://sanity.io/manage), create a project, and get your **Project ID**.
-
-### 3. Configure Environment Variables
-
-Create or edit `.env.local` in the project root:
-
-```env
-NEXT_PUBLIC_SANITY_PROJECT_ID="your_project_id_here"
-NEXT_PUBLIC_SANITY_DATASET="production"
-SANITY_AUTH_TOKEN="your_write_token_here"
-```
-
-1. Replace `your_project_id_here` with the actual ID from your Sanity dashboard.
-2. Replace `your_write_token_here` with a Sanity token that has **write** access (needed for seeding).
-
-### 4. Seed Sanity Content (Recommended)
-
-To populate the website immediately with professional Arabic content and high-quality images:
-
-```bash
-# Ensure you have tsx installed (or use npx)
-npx tsx src/sanity/seed.ts
-```
+*(Sanity CMS is currently being migrated to PostgreSQL. The previous Sanity integration is preserved temporarily until migration completion).*
 
 This will create:
 - **Site Settings**: Contact Info, SEO defaults

@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SiteSettings {
+  id                    String   @id @default(cuid())
+  companyName           String?
+  phone                 String?
+  whatsapp              String?
+  email                 String?
+  address               String?
+  defaultSeoTitle       String?
+  defaultSeoDescription String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Service {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String           @unique
+  shortDescription String?
+  description      String?
+  coverImage       String?
+  featured         Boolean          @default(false)
+  displayOrder     Int              @default(0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  
+  images           ServiceImage[]
+  contactRequests  ContactRequest[]
+
+  @@index([slug])
+  @@index([displayOrder])
+  @@index([featured])
+}
+
+model ServiceImage {
+  id           String  @id @default(cuid())
+  serviceId    String
+  service      Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  imageUrl     String
+  altText      String?
+  displayOrder Int     @default(0)
+
+  @@index([serviceId])
+  @@index([displayOrder])
+}
+
+model GalleryCategory {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  displayOrder Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  items        GalleryItem[]
+
+  @@index([slug])
+  @@index([displayOrder])
+}
+
+model GalleryItem {
+  id         String          @id @default(cuid())
+  title      String?
+  categoryId String
+  category   GalleryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  imageUrl   String
+  altText    String?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([categoryId])
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String?
+  coverImage  String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([publishedAt])
+}
+
+model ContactRequest {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  message   String?
+  createdAt DateTime @default(now())
+
+  @@index([serviceId])
+}

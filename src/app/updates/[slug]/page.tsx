@@ -2,8 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CalendarDays, ChevronLeft, MessageCircle } from 'lucide-react'
-import { safeFetch } from '@/lib/sanity.client'
-import { postBySlugQuery, postsSlugsQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import type { Metadata } from 'next'
@@ -14,43 +13,46 @@ interface Props {
     params: Promise<{ slug: string }>
 }
 
-function formatDate(dateStr?: string) {
-    if (!dateStr) return ''
-    return new Intl.DateTimeFormat('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(dateStr))
+function formatDate(date?: Date | null) {
+    if (!date) return ''
+    return new Intl.DateTimeFormat('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }).format(date)
 }
 
 export async function generateStaticParams() {
-    const slugs = await safeFetch<string[]>(postsSlugsQuery)
-    return (slugs ?? []).map((slug) => ({ slug }))
+    const posts = await prisma.post.findMany({ select: { slug: true } })
+    return posts.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params
-    const post = await safeFetch<any>(postBySlugQuery, { slug })
+    const post = await prisma.post.findUnique({ where: { slug } })
     if (!post) return { title: 'مقال غير موجود' }
     return {
         title: post.title,
-        description: post.excerpt,
+        description: post.excerpt ?? undefined,
         openGraph: {
             title: post.title,
-            description: post.excerpt,
-            images: post.coverImage?.asset?.url ? [post.coverImage.asset.url] : [],
+            description: post.excerpt ?? undefined,
+            images: post.coverImage ? [post.coverImage] : [],
         },
     }
 }
 
 export default async function PostDetailPage({ params }: Props) {
     const { slug } = await params
-    const post = await safeFetch<any>(postBySlugQuery, { slug }, { next: { revalidate: 3600 } })
+    const post = await prisma.post.findUnique({ where: { slug } })
 
     if (!post) notFound()
+
+    const settings = await prisma.siteSettings.findFirst()
+    const whatsapp = settings?.whatsapp || '+966538314660'
 
     return (
         <>
             {/* Cover */}
             <div className="relative h-56 md:h-96 bg-primary overflow-hidden">
-                {post.coverImage?.asset?.url ? (
-                    <Image src={post.coverImage.asset.url} alt={post.title} fill className="object-cover opacity-50" sizes="100vw" priority />
+                {post.coverImage ? (
+                    <Image src={post.coverImage} alt={post.title} fill className="object-cover opacity-50" sizes="100vw" priority />
                 ) : (
                     <div className="w-full h-full bg-gradient-to-b from-primary to-zinc-800" />
                 )}
@@ -82,10 +84,9 @@ export default async function PostDetailPage({ params }: Props) {
                             </p>
                         )}
 
-                        {/* Portable text placeholder – install @portabletext/react for rich rendering */}
                         {post.content && (
-                            <div className="prose prose-zinc max-w-none text-muted-foreground leading-relaxed">
-                                <p className="text-sm italic text-muted-foreground">المحتوى الكامل يُعرض هنا.</p>
+                            <div className="prose prose-zinc max-w-none text-muted-foreground leading-relaxed whitespace-pre-line text-base">
+                                {post.content}
                             </div>
                         )}
 
@@ -95,7 +96,7 @@ export default async function PostDetailPage({ params }: Props) {
                                 <ChevronLeft size={16} />
                                 العودة إلى المستجدات
                             </Link>
-                            <a href="https://wa.me/966555000000" target="_blank" rel="noopener noreferrer">
+                            <a href={`https://wa.me/${whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
                                 <Button>
                                     <MessageCircle size={18} />
                                     تواصل معنا

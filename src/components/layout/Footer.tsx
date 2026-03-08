@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Phone, MessageCircle, MapPin, Mail } from 'lucide-react'
+import { Phone, MessageCircle, MapPin, Mail, Github, Instagram, Facebook } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 
 const footerLinks = {
@@ -22,7 +22,7 @@ const footerLinks = {
 export function Footer({ settings, services }: { settings: any; services: any[] | null }) {
     const currentYear = new Date().getFullYear()
 
-    const phone = settings?.phone || '+966555000000'
+    const phone = settings?.phone || '+966 53 831 4660'
     const whatsapp = settings?.whatsapp || phone
     const email = settings?.email || 'info@aamarshades.com'
     const address = settings?.address || 'المملكة العربية السعودية'
@@ -30,7 +30,7 @@ export function Footer({ settings, services }: { settings: any; services: any[] 
 
     // Use dynamic services if available, fallback to hardcoded if not
     const displayServices = services && services.length > 0
-        ? services.map(s => ({ href: `/services/${s.slug.current}`, label: s.title }))
+        ? services.map(s => ({ href: `/services/${s.slug}`, label: s.title }))
         : footerLinks.services
 
     return (
@@ -104,9 +104,37 @@ export function Footer({ settings, services }: { settings: any; services: any[] 
             {/* Bottom bar */}
             <div className="border-t border-white/10">
                 <Container>
-                    <div className="flex flex-col sm:flex-row items-center justify-between py-5 gap-2 text-xs text-white/40">
+                    <div className="flex flex-col sm:flex-row items-center justify-between py-5 gap-4 text-xs text-white/40">
                         <p>© {currentYear} {companyName}. جميع الحقوق محفوظة.</p>
-                        <p>تصميم وتطوير احترافي</p>
+                        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
+                            <p>تصميم وتطوير المهندس علي الفقير</p>
+                            <div className="flex items-center gap-4 text-white/70" dir="ltr">
+                                <a href="https://github.com/alfakir1" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" title="Github">
+                                    <Github size={16} />
+                                </a>
+                                <a href="https://www.facebook.com/share/1GWcs4EKaz/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors" title="Facebook">
+                                    <Facebook size={16} />
+                                </a>
+                                <a href="https://www.instagram.com/7s.i4?igsh=MXFjMGk5N2Nmd2Y1NQ==" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors" title="Instagram">
+                                    <Instagram size={16} />
+                                </a>
+                                <div className="w-px h-4 bg-white/20 mx-1 hidden sm:block"></div>
+                                {/* <a href="tel:+967777073977" className="flex items-center gap-1.5 hover:text-white transition-colors whitespace-nowrap">
+                                    <Phone size={14} />
+                                    <span>+967 777073977</span>
+                                </a> */}
+                                <a
+                                    href={`https://wa.me/967777073977?text=${encodeURIComponent('مرحباً، أريد الاستفسار عن خدمات تصميم وتطوير المواقع الإلكترونية.')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 hover:text-green-400 transition-colors whitespace-nowrap"
+                                    title="تواصل عبر واتساب"
+                                >
+                                    <MessageCircle size={14} />
+                                    <span>واتساب</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </Container>
             </div>

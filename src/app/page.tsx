@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ChevronLeft, PhoneCall, MessageCircle, Shield, Award, Clock, Star } from 'lucide-react'
-import { safeFetch } from '@/lib/sanity.client'
-import { featuredServicesQuery, recentPostsQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import { ServiceGrid } from '@/components/services/ServiceGrid'
 import { PostCard } from '@/components/posts/PostCard'
 import { Container } from '@/components/ui/Container'
@@ -9,7 +8,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
 import type { Metadata } from 'next'
 
-export const revalidate = 3600 // ISR: revalidate every hour
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'عمار للمظلات | الرئيسية',
@@ -24,10 +23,21 @@ const highlights = [
 ]
 
 export default async function HomePage() {
-  const [services, posts] = await Promise.all([
-    safeFetch<any[]>(featuredServicesQuery, {}, { next: { revalidate: 3600 } }),
-    safeFetch<any[]>(recentPostsQuery, {}, { next: { revalidate: 3600 } }),
+  const [services, posts, settings] = await Promise.all([
+    prisma.service.findMany({
+      where: { featured: true },
+      orderBy: { displayOrder: 'asc' },
+      take: 6,
+    }),
+    prisma.post.findMany({
+      orderBy: { publishedAt: 'desc' },
+      take: 3,
+    }),
+    prisma.siteSettings.findFirst(),
   ])
+
+  const whatsapp = settings?.whatsapp || '+966538314660'
+  const phone = settings?.phone || '+966538314660'
 
   return (
     <>
@@ -40,13 +50,11 @@ export default async function HomePage() {
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
-        {/* Accent blobs */}
         <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full bg-accent/10 blur-3xl" />
 
         <Container className="relative z-10 py-24">
           <div className="max-w-3xl">
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-accent/20 border border-accent/40 rounded-full px-4 py-2 mb-6">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span className="text-accent font-semibold text-sm">رواد صناعة التظليل في المملكة</span>
@@ -68,7 +76,7 @@ export default async function HomePage() {
                   <ChevronLeft size={20} className="rotate-180" />
                 </Button>
               </Link>
-              <a href="https://wa.me/966555000000" target="_blank" rel="noopener noreferrer">
+              <a href={`https://wa.me/${whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/30 text-white hover:bg-white hover:text-primary">
                   <MessageCircle size={20} />
                   واتساب
@@ -110,8 +118,7 @@ export default async function HomePage() {
             <ServiceGrid services={services} />
           ) : (
             <div className="text-center py-20 text-muted-foreground text-lg">
-              <p className="mb-4">الخدمات قيد الإضافة في لوحة التحكم.</p>
-              <p className="text-sm">قم بإضافة خدمات عبر Sanity Studio وضع علامة &quot;مميز&quot; لتظهر هنا.</p>
+              <p>الخدمات قيد الإضافة قريباً.</p>
             </div>
           )}
         </Container>
@@ -150,7 +157,7 @@ export default async function HomePage() {
               تواصل معنا اليوم للحصول على استشارة مجانية وتقدير تكلفة دقيق لمشروعك
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="tel:+966555000000">
+              <a href={`tel:${phone}`}>
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto">
                   <PhoneCall size={20} />
                   اتصل الآن
@@ -180,14 +187,14 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post: { _id: string; title: string; slug: { current: string }; excerpt?: string; publishedAt?: string; coverImage?: { asset: { url: string } } }) => (
+              {posts.map((post) => (
                 <PostCard
-                  key={post._id}
+                  key={post.id}
                   title={post.title}
-                  slug={post.slug.current}
-                  excerpt={post.excerpt}
-                  publishedAt={post.publishedAt}
-                  imageUrl={post.coverImage?.asset?.url}
+                  slug={post.slug}
+                  excerpt={post.excerpt ?? undefined}
+                  publishedAt={post.publishedAt?.toISOString()}
+                  imageUrl={post.coverImage ?? undefined}
                 />
               ))}
             </div>

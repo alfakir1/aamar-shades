@@ -3,8 +3,7 @@ import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
 import { RequestForm } from '@/components/ui/RequestForm'
-import { safeFetch } from '@/lib/sanity.client'
-import { siteSettingsQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -13,9 +12,9 @@ export const metadata: Metadata = {
 }
 
 export default async function RequestPage() {
-    const settings = await safeFetch<any>(siteSettingsQuery)
+    const settings = await prisma.siteSettings.findFirst()
 
-    const phone = settings?.phone || '+966555000000'
+    const phone = settings?.phone || '+966538314660'
     const whatsapp = settings?.whatsapp || phone
     const email = settings?.email || 'info@aamarshades.com'
     const address = settings?.address || 'المملكة العربية السعودية'
@@ -64,7 +63,6 @@ export default async function RequestPage() {
                                 ))}
                             </div>
 
-                            {/* Quick actions */}
                             <div className="mt-10 flex flex-col sm:flex-row gap-4">
                                 <a href={`tel:${phone}`} className="flex-1">
                                     <Button size="lg" className="w-full">

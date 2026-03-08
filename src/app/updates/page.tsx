@@ -1,12 +1,11 @@
-import { safeFetch } from '@/lib/sanity.client'
-import { postsQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import { PostCard } from '@/components/posts/PostCard'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export const metadata: Metadata = {
     title: 'المستجدات',
@@ -14,7 +13,9 @@ export const metadata: Metadata = {
 }
 
 export default async function UpdatesPage() {
-    const posts = await safeFetch<any[]>(postsQuery, {}, { next: { revalidate: 60 } })
+    const posts = await prisma.post.findMany({
+        orderBy: { publishedAt: 'desc' },
+    })
 
     return (
         <>
@@ -34,14 +35,14 @@ export default async function UpdatesPage() {
                     <SectionHeading title="جميع المقالات" subtitle="تحديثات دورية من فريق عمار للمظلات" />
                     {posts && posts.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {posts.map((post: { _id: string; title: string; slug: { current: string }; excerpt?: string; publishedAt?: string; coverImage?: { asset: { url: string } } }) => (
+                            {posts.map((post) => (
                                 <PostCard
-                                    key={post._id}
+                                    key={post.id}
                                     title={post.title}
-                                    slug={post.slug.current}
-                                    excerpt={post.excerpt}
-                                    publishedAt={post.publishedAt}
-                                    imageUrl={post.coverImage?.asset?.url}
+                                    slug={post.slug}
+                                    excerpt={post.excerpt ?? undefined}
+                                    publishedAt={post.publishedAt?.toISOString()}
+                                    imageUrl={post.coverImage ?? undefined}
                                 />
                             ))}
                         </div>

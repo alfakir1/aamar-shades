@@ -4,9 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { StickyCTA } from "@/components/layout/StickyCTA";
-
-import { safeFetch } from "@/lib/sanity.client";
-import { siteSettingsQuery, servicesQuery } from "@/lib/sanity.queries";
+import prisma from "@/lib/prisma";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -33,8 +31,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await safeFetch<any>(siteSettingsQuery);
-  const services = await safeFetch<any[]>(servicesQuery);
+  const [settings, services] = await Promise.all([
+    prisma.siteSettings.findFirst(),
+    prisma.service.findMany({ orderBy: { displayOrder: 'asc' } }),
+  ]);
 
   return (
     <html lang="ar" dir="rtl">

@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card'
 interface ServiceCardProps {
     title: string
     slug: string
-    shortDescription: string
+    shortDescription?: string | null
     imageUrl?: string
 }
 

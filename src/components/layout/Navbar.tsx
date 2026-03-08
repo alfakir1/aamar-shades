@@ -19,7 +19,7 @@ export function Navbar({ settings }: { settings: any }) {
     const [isOpen, setIsOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
 
-    const phone = settings?.phone || '+966555000000'
+    const phone = settings?.phone || '+966 53 831 4660'
     const companyName = settings?.companyName || 'عمار للمظلات'
 
     useEffect(() => {

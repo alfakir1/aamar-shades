@@ -1,12 +1,11 @@
-import { safeFetch } from '@/lib/sanity.client'
-import { servicesQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import { ServiceGrid } from '@/components/services/ServiceGrid'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { EmptyState } from '@/components/ui/EmptyState'
 import type { Metadata } from 'next'
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export const metadata: Metadata = {
     title: 'خدماتنا',
@@ -14,7 +13,9 @@ export const metadata: Metadata = {
 }
 
 export default async function ServicesPage() {
-    const services = await safeFetch<any[]>(servicesQuery, {}, { next: { revalidate: 60 } })
+    const services = await prisma.service.findMany({
+        orderBy: { displayOrder: 'asc' },
+    })
 
     return (
         <>

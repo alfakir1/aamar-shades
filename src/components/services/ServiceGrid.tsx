@@ -1,11 +1,11 @@
 import { ServiceCard } from './ServiceCard'
 
 interface Service {
-    _id: string
+    id: string
     title: string
-    slug: { current: string }
-    shortDescription: string
-    coverImage?: { asset: { url: string } }
+    slug: string
+    shortDescription?: string | null
+    coverImage?: string | null
 }
 
 interface ServiceGridProps {
@@ -17,11 +17,11 @@ export function ServiceGrid({ services }: ServiceGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service) => (
                 <ServiceCard
-                    key={service._id}
+                    key={service.id}
                     title={service.title}
-                    slug={service.slug.current}
+                    slug={service.slug}
                     shortDescription={service.shortDescription}
-                    imageUrl={service.coverImage?.asset?.url}
+                    imageUrl={service.coverImage ?? undefined}
                 />
             ))}
         </div>

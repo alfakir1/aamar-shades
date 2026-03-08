@@ -1,13 +1,12 @@
 import { MetadataRoute } from 'next'
-import { safeFetch } from '@/lib/sanity.client'
-import { servicesSlugsQuery, postsSlugsQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://aamarshades.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const [serviceSlugs, postSlugs] = await Promise.all([
-        safeFetch<string[]>(servicesSlugsQuery),
-        safeFetch<string[]>(postsSlugsQuery),
+    const [services, posts] = await Promise.all([
+        prisma.service.findMany({ select: { slug: true, updatedAt: true } }),
+        prisma.post.findMany({ select: { slug: true, updatedAt: true } }),
     ])
 
     const static_pages = ['', '/about', '/services', '/gallery', '/request', '/updates'].map((path) => ({
@@ -17,16 +16,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: path === '' ? 1 : 0.8,
     }))
 
-    const service_pages = (serviceSlugs ?? []).map((slug) => ({
-        url: `${BASE_URL}/services/${slug}`,
-        lastModified: new Date(),
+    const service_pages = services.map((s) => ({
+        url: `${BASE_URL}/services/${s.slug}`,
+        lastModified: s.updatedAt,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
     }))
 
-    const post_pages = (postSlugs ?? []).map((slug) => ({
-        url: `${BASE_URL}/updates/${slug}`,
-        lastModified: new Date(),
+    const post_pages = posts.map((p) => ({
+        url: `${BASE_URL}/updates/${p.slug}`,
+        lastModified: p.updatedAt,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }))

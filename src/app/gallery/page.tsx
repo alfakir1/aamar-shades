@@ -1,5 +1,4 @@
-import { safeFetch } from '@/lib/sanity.client'
-import { galleryItemsQuery, galleryCategoriesQuery } from '@/lib/sanity.queries'
+import prisma from '@/lib/prisma'
 import { GalleryClient } from '@/components/gallery/GalleryClient'
 import { Container } from '@/components/ui/Container'
 import type { Metadata } from 'next'
@@ -12,9 +11,14 @@ export const metadata: Metadata = {
 }
 
 export default async function GalleryPage() {
-    const [items, categories] = await Promise.all([
-        safeFetch<any[]>(galleryItemsQuery, {}, { next: { revalidate: 3600 } }),
-        safeFetch<any[]>(galleryCategoriesQuery, {}, { next: { revalidate: 3600 } }),
+    const [categories, items] = await Promise.all([
+        prisma.galleryCategory.findMany({
+            orderBy: { displayOrder: 'asc' },
+        }),
+        prisma.galleryItem.findMany({
+            include: { category: { select: { slug: true, title: true } } },
+            orderBy: { createdAt: 'desc' },
+        }),
     ])
 
     return (

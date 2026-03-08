@@ -3,7 +3,7 @@
 import { Phone, MessageCircle } from 'lucide-react'
 
 export function StickyCTA({ settings }: { settings: any }) {
-    const phone = settings?.phone || '+966555000000'
+    const phone = settings?.phone || '+966 53 831 4660'
     const whatsapp = settings?.whatsapp || phone
     const WHATSAPP_MESSAGE = encodeURIComponent('مرحباً، أود الاستفسار عن خدماتكم')
 
