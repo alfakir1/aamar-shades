@@ -1,6 +1,6 @@
 # عمار للمظلات — Aamar Shades Corporate Website
 
-Modern industrial corporate website built with **Next.js 14+ App Router**, **TypeScript**, **Tailwind CSS v4**, and **Sanity CMS**.
+Modern industrial corporate website built with **Next.js 14+ App Router**, **TypeScript**, **Tailwind CSS v4**, and **Prisma ORM** with **PostgreSQL**.
 
 ---
 
@@ -11,8 +11,9 @@ Modern industrial corporate website built with **Next.js 14+ App Router**, **Typ
 | Framework   | Next.js 14+ (App Router)             |
 | Language    | TypeScript                           |
 | Styling     | Tailwind CSS v4                      |
-| CMS         | Sanity v3 (Studio embedded at /studio) |
-| Font        | Cairo (Arabic + Latin, Google Fonts)  |
+| Database    | PostgreSQL                           |
+| ORM         | Prisma ORM                           |
+| Font        | Cairo (Arabic + Latin, Google Fonts) |
 | Icons       | Lucide React                         |
 
 ---
@@ -35,34 +36,26 @@ DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/aamar_shades?sc
 npm install
 npx prisma generate
 npx prisma migrate dev --name init
-npm run seed
+npx prisma db seed
 npm run dev
 ```
 
 Visit: [http://localhost:3000](http://localhost:3000)
 
-*(Sanity CMS is currently being migrated to PostgreSQL. The previous Sanity integration is preserved temporarily until migration completion).*
-
-This will create:
+The `seed` command will populate your database with:
 - **Site Settings**: Contact Info, SEO defaults
-- **Services**: 6 main services with descriptions and images
-- **Gallery**: Categories and initial items
+- **Services**: 6 main services with descriptions and real images
+- **Gallery**: Categories and initial gallery items
 - **Posts**: 3 starting blog posts
 
-### 5. Run Next.js Locally
+### 3. Database Management Studio
+
+You can view and edit the database records using Prisma Studio:
 
 ```bash
-npm run dev
+npx prisma studio
 ```
-
-Visit: [http://localhost:3000](http://localhost:3000)
-
-### 6. CORS Requirements
-
-If you encounter issues with Sanity Studio or fetching data, Ensure your Sanity project allows the following origin:
-- `http://localhost:3000`
-
-Go to [sanity.io/manage](https://sanity.io/manage) > Settings > API > CORS origins to add it.
+Visit: [http://localhost:5555](http://localhost:5555)
 
 ---
 
@@ -70,12 +63,11 @@ Go to [sanity.io/manage](https://sanity.io/manage) > Settings > API > CORS origi
 
 All content pages use ISR (Incremental Static Regeneration).
 
-- **Local Development**: `npm run dev` fetches fresh data on every request.
+- **Local Development**: `npm run dev` fetches fresh data dynamically.
 - **Production Testing**: To test real ISR behavior (caching + background revalidation):
-  1. Set `revalidate = 60` in relevant routes (currently 60s for testing).
-  2. Run `npm build && npm start`.
-  3. Change content in Sanity.
-  4. Refresh the page (it may take two refreshes to see the update after 1 min).
+  1. Build the app: `npm run build && npm run start`.
+  2. Change content in the database (e.g., via Prisma Studio).
+  3. Refresh the page (it may take a short time to revalidate based on the route's setting, typically 3600s).
 
 ---
 
@@ -103,8 +95,8 @@ npm run start
 
 ## 📞 Single Source of Truth
 
-The website reads all contact info (Phone, WhatsApp, Email, Address) from **Sanity Site Settings**.
-Updating them in the CMS will reflect across:
+The website reads all contact info (Phone, WhatsApp, Email, Address) dynamically from the **SiteSettings** table in the PostgreSQL database.
+Updating them in the database will reflect across:
 - Navbar
 - Footer
 - Sticky CTA
