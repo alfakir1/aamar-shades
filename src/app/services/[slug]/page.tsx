@@ -138,11 +138,46 @@ export default async function ServiceDetailPage({ params }: Props) {
                                     </a>
                                     <Link href="/request">
                                         <Button variant="ghost" className="w-full text-sm">
-                                            أو أرسل طلبًا مكتوبًا ←
+                                            أو أرسل طلب عرض سعر مكتوبًا ←
                                         </Button>
                                     </Link>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
+            {/* Bottom CTA */}
+            <section className="pb-16 bg-background">
+                <Container>
+                    <div className="mt-4 rounded-2xl border border-dashed border-accent/40 bg-accent/5 px-6 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <h2 className="text-lg font-bold text-primary mb-1">
+                                هل هذه الخدمة هي ما تبحث عنه لموقعك؟
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                أرسل لنا تفاصيل موقعك لنقترح لك أفضل طريقة لتنفيذ {service.title} مع تقدير تكلفة ومدة التنفيذ.
+                            </p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <Link href="/request">
+                                <Button size="sm" className="whitespace-nowrap">
+                                    طلب عرض سعر لهذه الخدمة
+                                </Button>
+                            </Link>
+                            <a
+                                href={`https://wa.me/${whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent(
+                                    `أريد الاستفسار عن خدمة: ${service.title}`,
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Button variant="outline" size="sm" className="whitespace-nowrap">
+                                    <MessageCircle size={16} />
+                                    واتساب مباشر
+                                </Button>
+                            </a>
                         </div>
                     </div>
                 </Container>

@@ -18,8 +18,8 @@ function formatDate(dateStr?: string) {
 
 export function PostCard({ title, slug, excerpt, publishedAt, imageUrl }: PostCardProps) {
     return (
-        <Card hoverable className="overflow-hidden flex flex-col group">
-            <div className="relative h-44 bg-secondary overflow-hidden">
+        <Card hoverable className="overflow-hidden flex flex-col group h-full">
+            <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
                 {imageUrl ? (
                     <Image src={imageUrl} alt={title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
                 ) : (
@@ -35,9 +35,18 @@ export function PostCard({ title, slug, excerpt, publishedAt, imageUrl }: PostCa
                         <span>{formatDate(publishedAt)}</span>
                     </div>
                 )}
-                <h3 className="font-bold text-base text-primary mb-2 group-hover:text-accent transition-colors">{title}</h3>
-                {excerpt && <p className="text-sm text-muted-foreground leading-relaxed flex-grow">{excerpt}</p>}
-                <Link href={`/updates/${slug}`} className="mt-4 inline-flex items-center gap-1 text-accent font-semibold text-sm hover:gap-2 transition-all">
+                <h3 className="font-bold text-base md:text-lg text-primary mb-2 group-hover:text-accent transition-colors">
+                    {title}
+                </h3>
+                {excerpt && (
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-grow line-clamp-3">
+                        {excerpt}
+                    </p>
+                )}
+                <Link
+                    href={`/updates/${slug}`}
+                    className="mt-4 inline-flex items-center gap-1 text-accent font-semibold text-xs md:text-sm hover:gap-2 transition-all"
+                >
                     اقرأ المزيد <ArrowLeft size={16} className="rotate-180" />
                 </Link>
             </div>

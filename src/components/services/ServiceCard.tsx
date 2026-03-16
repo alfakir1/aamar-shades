@@ -14,7 +14,7 @@ export function ServiceCard({ title, slug, shortDescription, imageUrl }: Service
     return (
         <Card hoverable className="overflow-hidden flex flex-col h-full group">
             {/* Image */}
-            <div className="relative h-52 bg-secondary overflow-hidden">
+            <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
                 {imageUrl ? (
                     <Image
                         src={imageUrl}
@@ -33,15 +33,15 @@ export function ServiceCard({ title, slug, shortDescription, imageUrl }: Service
 
             {/* Content */}
             <div className="p-5 flex flex-col flex-grow">
-                <h3 className="font-bold text-lg text-primary mb-2 group-hover:text-accent transition-colors">
+                <h3 className="font-bold text-base md:text-lg text-primary mb-2 group-hover:text-accent transition-colors">
                     {title}
                 </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed flex-grow">
+                <p className="text-muted-foreground text-sm leading-relaxed flex-grow line-clamp-3">
                     {shortDescription}
                 </p>
                 <Link
                     href={`/services/${slug}`}
-                    className="mt-4 inline-flex items-center gap-1 text-accent font-semibold text-sm hover:gap-2 transition-all"
+                    className="mt-4 inline-flex items-center gap-1 text-accent font-semibold text-xs md:text-sm hover:gap-2 transition-all"
                 >
                     اعرف المزيد
                     <ArrowLeft size={16} className="rotate-180" />

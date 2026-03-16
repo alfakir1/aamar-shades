@@ -91,17 +91,33 @@ export default async function PostDetailPage({ params }: Props) {
                         )}
 
                         {/* Footer CTA */}
-                        <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <Link href="/updates" className="text-accent font-semibold text-sm hover:underline flex items-center gap-1">
-                                <ChevronLeft size={16} />
-                                العودة إلى المستجدات
-                            </Link>
-                            <a href={`https://wa.me/${whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
-                                <Button>
-                                    <MessageCircle size={18} />
-                                    تواصل معنا
-                                </Button>
-                            </a>
+                        <div className="mt-16 pt-8 border-t border-border flex flex-col gap-6">
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <Link
+                                    href="/updates"
+                                    className="text-accent font-semibold text-sm hover:underline flex items-center gap-1"
+                                >
+                                    <ChevronLeft size={16} />
+                                    العودة إلى المستجدات
+                                </Link>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <Link href="/request">
+                                        <Button variant="outline" size="sm" className="whitespace-nowrap">
+                                            طلب عرض سعر
+                                        </Button>
+                                    </Link>
+                                    <a
+                                        href={`https://wa.me/${whatsapp.replace(/\+/g, '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Button size="sm" className="whitespace-nowrap">
+                                            <MessageCircle size={18} />
+                                            واتساب مباشر
+                                        </Button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </Container>

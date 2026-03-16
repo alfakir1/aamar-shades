@@ -56,7 +56,7 @@ export function Navbar({ settings }: { settings: any }) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="px-4 py-2 text-sm font-medium text-foreground rounded-lg hover:bg-secondary hover:text-accent transition-colors duration-200"
+                                className="px-4 py-2 text-sm font-medium text-foreground rounded-full hover:bg-secondary hover:text-accent transition-colors duration-200"
                             >
                                 {link.label}
                             </Link>
@@ -66,7 +66,7 @@ export function Navbar({ settings }: { settings: any }) {
                     {/* CTA Phone */}
                     <a
                         href={`tel:${phone}`}
-                        className="hidden md:flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-orange-600 transition-colors"
+                        className="hidden md:inline-flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-full font-semibold text-sm hover:bg-accent/90 transition-colors"
                     >
                         <Phone size={16} />
                         اتصل بنا
