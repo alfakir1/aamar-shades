@@ -7,17 +7,22 @@ import prisma from '@/lib/prisma'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'طلب خدمة',
-    description: 'تواصل مع عمار للمظلات لطلب عرض سعر أو استشارة مجانية.',
+    title: 'طلب خدمة | معالم الظل',
+    description: 'اطلب عرض سعر أو استشارة مجانية من معالم الظل لجميع خدمات المظلات، السواتر، الهناجر، البرجولات، والكلادينج.',
+    keywords: ['طلب خدمة', 'عرض سعر', 'استشارة', 'معالم الظل'],
 }
 
 export default async function RequestPage() {
-    const settings = await prisma.siteSettings.findFirst()
+    const [settings, services] = await Promise.all([
+        prisma.siteSettings.findFirst(),
+        prisma.service.findMany({ orderBy: { displayOrder: 'asc' } }),
+    ])
 
     const phone = settings?.phone || '+966538314660'
     const whatsapp = settings?.whatsapp || phone
     const email = settings?.email || 'info@aamarshades.com'
     const address = settings?.address || 'المملكة العربية السعودية'
+    const serviceTitles = services.map((service) => service.title)
 
     const contactOptions = [
         { icon: PhoneCall, label: 'هاتف', value: phone, href: `tel:${phone}` },
@@ -82,7 +87,7 @@ export default async function RequestPage() {
                         {/* Form */}
                         <div className="bg-secondary rounded-2xl p-8 border border-border">
                             <h2 className="text-xl font-bold text-primary mb-6">أرسل طلبك</h2>
-                            <RequestForm whatsappNumber={whatsapp} />
+                            <RequestForm whatsappNumber={whatsapp} serviceOptions={serviceTitles} siteUrl="https://maalim-al-dhil.com" />
                         </div>
                     </div>
                 </Container>

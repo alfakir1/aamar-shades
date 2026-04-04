@@ -9,18 +9,21 @@ interface RequestFormProps {
     serviceSlug?: string
     serviceCoverImage?: string
     siteUrl?: string
+    serviceOptions?: string[]
 }
 
-const SERVICES = [
+const DEFAULT_SERVICES = [
     'مظلات السيارات',
     'الهناجر',
     'برجولات الحدائق',
     'الجلسات الخارجية',
     'سواتر الحوش',
+    'سواتر حماية',
+    'ساندوتش بانل',
     'كلادينج الواجهات',
 ]
 
-export function RequestForm({ whatsappNumber, serviceSlug, serviceCoverImage, siteUrl = 'https://aamar-shades.com' }: RequestFormProps) {
+export function RequestForm({ whatsappNumber, serviceSlug, serviceCoverImage, siteUrl = 'https://maalim-al-dhil.com', serviceOptions }: RequestFormProps) {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -144,7 +147,7 @@ export function RequestForm({ whatsappNumber, serviceSlug, serviceCoverImage, si
                     className="w-full px-4 py-3 rounded-lg border border-border bg-white text-primary focus:outline-none focus:ring-2 focus:ring-accent/50"
                 >
                     <option value="">اختر الخدمة</option>
-                    {SERVICES.map((s) => (
+                    {(serviceOptions ?? DEFAULT_SERVICES).map((s) => (
                         <option key={s} value={s}>{s}</option>
                     ))}
                 </select>

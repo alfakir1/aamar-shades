@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Car, Warehouse, Trees, Sofa, Shield, Square, Building, Tent, Layers, Package, Home } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 
 interface ServiceCardProps {
@@ -10,7 +10,30 @@ interface ServiceCardProps {
     imageUrl?: string
 }
 
+const getServiceIcon = (slug: string) => {
+    const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+        'car-shades': Car,
+        'hangars': Warehouse,
+        'pergolas': Trees,
+        'outdoor-seating': Sofa,
+        'security-screens': Shield,
+        'sandwich-panel': Layers,
+        'facade-cladding': Building,
+        'tents': Tent,
+        'roof-tiles': Home,
+        'pyramid-shades': Package,
+        'movable-shades': Home,
+        'wooden-screens': Layers,
+        'fabric-screens': Tent,
+        'iron-screens': Shield,
+    }
+
+    return iconMap[slug] || Building
+}
+
 export function ServiceCard({ title, slug, shortDescription, imageUrl }: ServiceCardProps) {
+    const IconComponent = getServiceIcon(slug)
+
     return (
         <Card hoverable className="overflow-hidden flex flex-col h-full group">
             {/* Image */}
@@ -25,10 +48,13 @@ export function ServiceCard({ title, slug, shortDescription, imageUrl }: Service
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200">
-                        <span className="text-4xl text-muted-foreground">🏗️</span>
+                        <IconComponent size={48} className="text-muted-foreground" />
                     </div>
                 )}
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300" />
+                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                    <IconComponent size={20} className="text-primary" />
+                </div>
             </div>
 
             {/* Content */}

@@ -1,4 +1,4 @@
-# عمار للمظلات — Aamar Shades Corporate Website
+# معالم الظل — Maalim Aldhil Corporate Website
 
 Modern industrial corporate website built with **Next.js 14+ App Router**, **TypeScript**, **Tailwind CSS v4**, and **Prisma ORM** with **PostgreSQL**.
 

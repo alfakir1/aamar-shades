@@ -10,8 +10,9 @@ import type { Metadata } from 'next'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'المستجدات',
-    description: 'آخر أخبار عمار للمظلات، مشاريعنا الجديدة، ومقالات تقنية في مجال التظليل.',
+    title: 'المستجدات | معالم الظل',
+    description: 'آخر أخبار معالم الظل ومشاريعنا الجديدة في المظلات، السواتر، الهناجر، البرجولات، والكلادينج.',
+    keywords: ['مقالات', 'أخبار المشاريع', 'معالم الظل', 'تحديثات']
 }
 
 export default async function UpdatesPage() {

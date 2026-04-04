@@ -10,9 +10,10 @@ import type { Metadata } from 'next'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'خدماتنا',
+    title: 'خدمات معالم الظل',
     description:
-        'اكتشف مجموعة خدمات عمار للمظلات: مظلات السيارات، الهناجر، البرجولات، الجلسات الخارجية، السواتر، وكلادينج الواجهات.',
+        'اكتشف خدمات معالم الظل الاحترافية في المظلات، السواتر، الهناجر، البرجولات، الجلسات الخارجية، الساندوتش بانل، والكلادينج.',
+    keywords: ['معالم الظل', 'خدمات التظليل', 'سواتر حماية', 'ساندوتش بانل', 'هناجر', 'كلادينج'],
 }
 
 export default async function ServicesPage() {
@@ -27,9 +28,10 @@ export default async function ServicesPage() {
         ...byTitle('برجولات الحدائق'),
         ...byTitle('الجلسات الخارجية'),
         ...byTitle('سواتر الحوش'),
+        ...byTitle('سواتر حماية'),
     ]
 
-    const structureServices = [...byTitle('الهناجر')]
+    const structureServices = [...byTitle('الهناجر'), ...byTitle('ساندوتش بانل')]
 
     const facadeServices = [...byTitle('كلادينج الواجهات')]
 

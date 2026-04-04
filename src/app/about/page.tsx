@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 
 export const metadata: Metadata = {
-    title: 'من نحن',
-    description: 'تعرف على شركة عمار للمظلات وخبرتها الطويلة في مجال أنظمة التظليل والهياكل الخارجية.',
+    title: 'من نحن | معالم الظل',
+    description: 'تعرف على شركة معالم الظل وخبرتها الطويلة في مجال المظلات، السواتر، الهناجر، البرجولات، والكلادينج في السعودية.',
+    keywords: ['معالم الظل', 'شركتنا', 'خبرة التظليل', 'سواتر حماية', 'ساندوتش بانل'],
 }
 
 const values = [
@@ -37,6 +38,15 @@ export default function AboutPage() {
             <section className="bg-primary py-16 md:py-20">
                 <Container>
                     <div className="max-w-2xl">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-14 h-14 rounded-2xl overflow-hidden bg-white/10 border border-white/20 flex items-center justify-center">
+                                <img src="/logo.png" alt="معالم الظل" className="w-full h-full object-contain" />
+                            </div>
+                            <div>
+                                <span className="text-sm text-accent font-semibold uppercase tracking-[0.2em]">معالم الظل</span>
+                                <p className="text-white/70 text-sm">الشركة السعودية لحلول التظليل والهياكل الخارجية</p>
+                            </div>
+                        </div>
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">من نحن</h1>
                         <p className="text-white/70 text-lg leading-relaxed">
                             نحن فريق متخصص في حلول التظليل والهياكل الخارجية في المملكة، نعمل في المواقع والورش
@@ -70,11 +80,17 @@ export default function AboutPage() {
                         </div>
 
                         <div className="relative h-72 lg:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 border border-border">
-                            <div className="absolute inset-0 bg-[url('/images/about-workshop-placeholder.jpg')] bg-cover bg-center opacity-80" />
+                            <div
+                                className="absolute inset-0 bg-cover bg-center opacity-90"
+                                style={{
+                                    backgroundImage:
+                                        'url(https://images.pexels.com/photos/261283/pexels-photo-261283.jpeg?auto=compress&cs=tinysrgb&w=1200)',
+                                }}
+                            />
                             <div className="relative z-10 w-full h-full bg-gradient-to-t from-black/40 to-black/5 flex items-end">
                                 <div className="p-6">
                                     <p className="text-white text-sm font-semibold">
-                                        لقطة من أرض الواقع أثناء تجهيز وتركيب أحد مشاريع المظلات.
+                                        لقطة من أرض الواقع أثناء تجهيز وتركيب أحد مشاريع التظليل.
                                     </p>
                                 </div>
                             </div>
@@ -111,7 +127,7 @@ export default function AboutPage() {
                         <div>
                             <SectionHeading
                                 title="لماذا نحن الخيار الأول؟"
-                                subtitle="مميزات تجعل عمار للمظلات شريكًا عمليًا في موقعك"
+                                subtitle="مميزات تجعل معالم الظل شريكًا عمليًا في موقعك"
                             />
                             <div className="mt-6 space-y-3 text-sm text-muted-foreground leading-relaxed">
                                 <p>

@@ -28,10 +28,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const post = await prisma.post.findUnique({ where: { slug } })
     if (!post) return { title: 'مقال غير موجود' }
     return {
-        title: post.title,
+        title: `${post.title} | معالم الظل`,
         description: post.excerpt ?? undefined,
         openGraph: {
-            title: post.title,
+            title: `${post.title} | معالم الظل`,
+            description: post.excerpt ?? undefined,
+            images: post.coverImage ? [post.coverImage] : [],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${post.title} | معالم الظل`,
             description: post.excerpt ?? undefined,
             images: post.coverImage ? [post.coverImage] : [],
         },

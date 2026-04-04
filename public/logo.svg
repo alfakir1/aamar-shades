@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80">
+  <rect width="280" height="80" rx="18" fill="#1C1C1C" />
+  <path d="M33 61L16 40L33 19" fill="none" stroke="#D4AF37" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M22 40h72" fill="none" stroke="#D4AF37" stroke-width="10" stroke-linecap="round" />
+  <text x="110" y="48" fill="#D4AF37" font-family="Arial, sans-serif" font-size="28" font-weight="700">معالم الظل</text>
+</svg>

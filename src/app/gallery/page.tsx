@@ -8,8 +8,9 @@ import type { Metadata } from 'next'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'معرض الأعمال',
-    description: 'تصفح معرض أعمال عمار للمظلات — مشاريع مظلات، هناجر، برجولات، وسواتر في مختلف مناطق المملكة.',
+    title: 'معرض الأعمال | معالم الظل',
+    description: 'استعرض معرض أعمال معالم الظل لمشاريع مظلات السيارات، السواتر، الهناجر، البرجولات، والكلادينج في السعودية.',
+    keywords: ['معرض الأعمال', 'مشاريع مظلات', 'معرض سواتر', 'معرض هناجر', 'ساندوتش بانل'],
 }
 
 export default async function GalleryPage() {
